@@ -1,0 +1,396 @@
+
+openapi: 3.0.3
+
+info:
+  title: RegistrarSys REST API
+  version: 1.0.0
+  description: |
+    Registrar Management System REST API
+    for the SIA College Management System.
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+security: []
+
+tags:
+  - name: System
+    description: API information
+  - name: Programs
+    description: Academic programs
+  - name: Students
+    description: Student records management
+  - name: Enrollments
+    description: Student enrollment management
+  - name: Courses
+    description: Course management
+  - name: Academic Records
+    description: Student academic records
+
+paths:
+  /api:
+    get:
+      tags: [System]
+      summary: Get API information
+      operationId: getApiInfo
+      responses:
+        '200':
+          description: API information returned
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/programs:
+    get:
+      tags: [Programs]
+      summary: Get all programs
+      operationId: getPrograms
+      responses:
+        '200':
+          description: Programs retrieved
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/students:
+    get:
+      tags: [Students]
+      summary: Get all students
+      operationId: getStudents
+      responses:
+        '200':
+          description: Students retrieved
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags: [Students]
+      summary: Create a student
+      operationId: createStudent
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Request successful
+        '201':
+          description: Student created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/students/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Students]
+      summary: Get student by ID
+      operationId: getStudentById
+      responses:
+        '200':
+          description: Student retrieved
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags: [Students]
+      summary: Update student
+      operationId: updateStudent
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Student updated
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags: [Students]
+      summary: Delete student
+      operationId: deleteStudent
+      responses:
+        '200':
+          description: Student deleted
+        '204':
+          description: Student deleted without response body
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/enrollments:
+    get:
+      tags: [Enrollments]
+      summary: Get all enrollments
+      operationId: getEnrollments
+      responses:
+        '200':
+          description: Enrollments retrieved
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags: [Enrollments]
+      summary: Create enrollment
+      operationId: createEnrollment
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Request successful
+        '201':
+          description: Enrollment created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/enrollments/{id}:
+    get:
+      tags: [Enrollments]
+      summary: Get enrollment by ID
+      operationId: getEnrollmentById
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Enrollment retrieved
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/enrollments/{id}/status:
+    patch:
+      tags: [Enrollments]
+      summary: Update enrollment status
+      operationId: updateEnrollmentStatus
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  example: Enrolled
+      responses:
+        '200':
+          description: Enrollment status updated
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/courses:
+    get:
+      tags: [Courses]
+      summary: Get all courses
+      operationId: getCourses
+      responses:
+        '200':
+          description: Courses retrieved
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags: [Courses]
+      summary: Create course
+      operationId: createCourse
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Request successful
+        '201':
+          description: Course created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/courses/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Courses]
+      summary: Get course by ID
+      operationId: getCourseById
+      responses:
+        '200':
+          description: Course retrieved
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags: [Courses]
+      summary: Update course
+      operationId: updateCourse
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Course updated
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags: [Courses]
+      summary: Delete course
+      operationId: deleteCourse
+      responses:
+        '200':
+          description: Course deleted
+        '204':
+          description: Course deleted without response body
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/academic-records:
+    get:
+      tags: [Academic Records]
+      summary: Get all academic records
+      operationId: getAcademicRecords
+      responses:
+        '200':
+          description: Academic records retrieved
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags: [Academic Records]
+      summary: Create academic record
+      operationId: createAcademicRecord
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Request successful
+        '201':
+          description: Academic record created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/academic-records/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+
+    get:
+      tags: [Academic Records]
+      summary: Get academic record by ID
+      operationId: getAcademicRecordById
+      responses:
+        '200':
+          description: Academic record retrieved
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags: [Academic Records]
+      summary: Update academic record
+      operationId: updateAcademicRecord
+      requestBody:
+        $ref: '#/components/requestBodies/RecordBody'
+      responses:
+        '200':
+          description: Academic record updated
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags: [Academic Records]
+      summary: Delete academic record
+      operationId: deleteAcademicRecord
+      responses:
+        '200':
+          description: Academic record deleted
+        '204':
+          description: Academic record deleted without response body
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Numeric record identifier
+      schema:
+        type: integer
+        minimum: 1
+
+  schemas:
+    RecordPayload:
+      type: object
+      description: |
+        Record fields must match the backend implementation.
+      additionalProperties: true
+
+    ErrorResponse:
+      type: object
+      additionalProperties: true
+      description: API error response
+
+  requestBodies:
+    RecordBody:
+      required: true
+      description: Record information in JSON format
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RecordPayload'
+
+  responses:
+    BadRequest:
+      description: Invalid request data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Requested record not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
