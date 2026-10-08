@@ -1,0 +1,452 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RegistrarSys | College Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">R</div>
+      <div>
+        <strong>RegistrarSys</strong>
+        <small>College Management System</small>
+      </div>
+    </div>
+
+    <p class="nav-label">MAIN MENU</p>
+
+    <nav>
+      <a class="nav-link active" href="#dashboard" data-page="dashboard">▦ Dashboard</a>
+      <a class="nav-link" href="#students" data-page="students">♙ Student Records</a>
+      <a class="nav-link" href="#enrollments" data-page="enrollments">▤ Enrollment Management</a>
+      <a class="nav-link" href="#courses" data-page="courses">▧ Course Management</a>
+      <a class="nav-link" href="#academic" data-page="academic">▤ Academic Records</a>
+    </nav>
+
+    <div class="sidebar-bottom">Registrar Module · v1.4</div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">COLLEGE MANAGEMENT SYSTEM</span>
+        <h1 id="pageTitle">Registrar Dashboard</h1>
+        <p id="pageDescription">Manage student and academic records.</p>
+      </div>
+
+      <div class="admin-profile">
+        <span class="avatar">AD</span>
+        <div>
+          <strong>Admin User</strong>
+          <small>Registrar Admin</small>
+        </div>
+      </div>
+    </header>
+
+    <div id="notice" class="notice" role="status" hidden></div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="dashboard">
+      <div class="section-heading">
+        <div>
+          <h2>Overview</h2>
+          <p>Registrar records at a glance</p>
+        </div>
+        <button id="refreshBtn" class="btn btn-outline">↻ Refresh</button>
+      </div>
+
+      <div class="stats">
+        <article class="stat-card">
+          <span>Total Students</span>
+          <strong id="totalStudents">—</strong>
+          <small>Registered students</small>
+        </article>
+
+        <article class="stat-card">
+          <span>Enrolled Students</span>
+          <strong id="enrolledStudents">—</strong>
+          <small>Student record status</small>
+        </article>
+
+        <article class="stat-card">
+          <span>Pending Enrollments</span>
+          <strong id="pendingEnrollments">—</strong>
+          <small>Awaiting review</small>
+        </article>
+
+        <article class="stat-card">
+          <span>Total Courses</span>
+          <strong id="totalCourses">—</strong>
+          <small>Available courses</small>
+        </article>
+      </div>
+
+      <div class="panel" style="margin-top:24px">
+        <h2>Registrar Management</h2>
+        <p>Manage students, enrollments, courses, and grades.</p>
+
+        <div class="toolbar" style="margin-top:20px">
+          <button id="viewStudentsBtn" class="btn btn-primary">Student Records →</button>
+          <button id="viewEnrollmentsBtn" class="btn btn-outline">Enrollments →</button>
+          <button id="viewCoursesBtn" class="btn btn-outline">Courses →</button>
+          <button id="viewAcademicBtn" class="btn btn-outline">Academic Records →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDENT RECORDS -->
+    <section id="students" class="panel" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Student Records</h2>
+          <p>Register, update, and manage students.</p>
+        </div>
+        <button id="addStudentBtn" class="btn btn-primary">+ Add Student</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="Search students...">
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="Enrolled">Enrolled</option>
+          <option value="Pending">Pending</option>
+        </select>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Student Number</th>
+              <th>Full Name</th>
+              <th>Program</th>
+              <th>Year</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTable"></tbody>
+        </table>
+      </div>
+      <p id="recordCount" class="record-count"></p>
+    </section>
+
+    <!-- ENROLLMENT MANAGEMENT -->
+    <section id="enrollments" class="panel" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Enrollment Management</h2>
+          <p>Review, approve, or reject enrollment applications.</p>
+        </div>
+        <button id="addEnrollmentBtn" class="btn btn-primary">+ New Enrollment</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="enrollmentSearch" type="search" placeholder="Search enrollments...">
+        <select id="enrollmentFilter">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Student Number</th>
+              <th>Student Name</th>
+              <th>Program</th>
+              <th>Academic Year</th>
+              <th>Semester</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="enrollmentTable"></tbody>
+        </table>
+      </div>
+      <p id="enrollmentCount" class="record-count"></p>
+    </section>
+
+    <!-- COURSE MANAGEMENT -->
+    <section id="courses" class="panel" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Course Management</h2>
+          <p>Manage courses and academic programs.</p>
+        </div>
+        <button id="addCourseBtn" class="btn btn-primary">+ Add Course</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="courseSearch" type="search" placeholder="Search code or course title...">
+        <select id="courseProgramFilter">
+          <option value="">All Programs</option>
+        </select>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Course Title</th>
+              <th>Program</th>
+              <th>Units</th>
+              <th>Year Level</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="courseTable"></tbody>
+        </table>
+      </div>
+      <p id="courseCount" class="record-count"></p>
+    </section>
+
+    <!-- ACADEMIC RECORDS -->
+    <section id="academic" class="panel" hidden>
+      <div class="panel-heading">
+        <div>
+          <h2>Academic Records & Grades</h2>
+          <p>Manage student grades and academic performance.</p>
+        </div>
+        <button id="addRecordBtn" class="btn btn-primary">+ Add Grade</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="recordSearch" type="search" placeholder="Search student or course...">
+        <select id="recordRemarkFilter">
+          <option value="">All Remarks</option>
+          <option value="Passed">Passed</option>
+          <option value="Failed">Failed</option>
+        </select>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Course</th>
+              <th>Academic Year</th>
+              <th>Semester</th>
+              <th>Grade</th>
+              <th>Remarks</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="academicTable"></tbody>
+        </table>
+      </div>
+      <p id="academicCount" class="record-count"></p>
+    </section>
+
+    <footer>RegistrarSys · SIA College Management System</footer>
+  </main>
+</div>
+
+<!-- STUDENT DIALOG -->
+<dialog id="studentDialog">
+  <form id="studentForm">
+    <div class="dialog-heading">
+      <h2 id="dialogTitle">Add Student</h2>
+      <button type="button" id="closeDialog" class="close-btn">×</button>
+    </div>
+
+    <input type="hidden" id="studentId">
+
+    <label>Student Number
+      <input id="studentNumber" required maxlength="30" placeholder="2026-0003">
+    </label>
+
+    <div class="form-grid">
+      <label>First Name
+        <input id="firstName" required>
+      </label>
+      <label>Last Name
+        <input id="lastName" required>
+      </label>
+    </div>
+
+    <div class="form-grid">
+      <label>Program
+        <select id="program" required></select>
+      </label>
+      <label>Year Level
+        <select id="yearLevel">
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+          <option value="5">5th Year</option>
+          <option value="6">6th Year</option>
+        </select>
+      </label>
+    </div>
+
+    <label>Status
+      <select id="studentStatus">
+        <option value="Pending">Pending</option>
+        <option value="Enrolled">Enrolled</option>
+      </select>
+    </label>
+
+    <div class="dialog-actions">
+      <button type="button" id="cancelDialog" class="btn btn-outline">Cancel</button>
+      <button type="submit" id="saveStudentBtn" class="btn btn-primary">Save Student</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ENROLLMENT DIALOG -->
+<dialog id="enrollmentDialog">
+  <form id="enrollmentForm">
+    <div class="dialog-heading">
+      <h2>New Enrollment</h2>
+      <button type="button" id="closeEnrollmentDialog" class="close-btn">×</button>
+    </div>
+
+    <label>Student
+      <select id="enrollmentStudent" required></select>
+    </label>
+
+    <label>Academic Year
+      <input id="academicYear" required pattern="[0-9]{4}-[0-9]{4}" value="2026-2027">
+    </label>
+
+    <label>Semester
+      <select id="semester">
+        <option>1st Semester</option>
+        <option>2nd Semester</option>
+        <option>Summer</option>
+      </select>
+    </label>
+
+    <div class="dialog-actions">
+      <button type="button" id="cancelEnrollmentDialog" class="btn btn-outline">Cancel</button>
+      <button type="submit" id="saveEnrollmentBtn" class="btn btn-primary">Submit Enrollment</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- COURSE DIALOG -->
+<dialog id="courseDialog">
+  <form id="courseForm">
+    <div class="dialog-heading">
+      <h2 id="courseDialogTitle">Add Course</h2>
+      <button type="button" id="closeCourseDialog" class="close-btn">×</button>
+    </div>
+
+    <input type="hidden" id="courseId">
+
+    <label>Course Code
+      <input id="courseCode" required maxlength="30" placeholder="IT103">
+    </label>
+
+    <label>Course Title
+      <input id="courseTitle" required placeholder="Web Development">
+    </label>
+
+    <div class="form-grid">
+      <label>Program
+        <select id="courseProgram" required></select>
+      </label>
+
+      <label>Units
+        <input id="courseUnits" type="number" min="1" max="12" value="3" required>
+      </label>
+    </div>
+
+    <label>Year Level
+      <select id="courseYearLevel">
+        <option value="1">1st Year</option>
+        <option value="2">2nd Year</option>
+        <option value="3">3rd Year</option>
+        <option value="4">4th Year</option>
+        <option value="5">5th Year</option>
+        <option value="6">6th Year</option>
+      </select>
+    </label>
+
+    <div class="dialog-actions">
+      <button type="button" id="cancelCourseDialog" class="btn btn-outline">Cancel</button>
+      <button type="submit" id="saveCourseBtn" class="btn btn-primary">Save Course</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ACADEMIC RECORD DIALOG -->
+<dialog id="recordDialog">
+  <form id="recordForm">
+    <div class="dialog-heading">
+      <h2 id="recordDialogTitle">Add Grade</h2>
+      <button type="button" id="closeRecordDialog" class="close-btn">×</button>
+    </div>
+
+    <input type="hidden" id="recordId">
+
+    <label>Student
+      <select id="recordStudent" required></select>
+    </label>
+
+    <label>Course
+      <select id="recordCourse" required></select>
+    </label>
+
+    <div class="form-grid">
+      <label>Academic Year
+        <input
+          id="recordAcademicYear"
+          required
+          pattern="[0-9]{4}-[0-9]{4}"
+          value="2026-2027"
+        >
+      </label>
+
+      <label>Semester
+        <select id="recordSemester">
+          <option>1st Semester</option>
+          <option>2nd Semester</option>
+          <option>Summer</option>
+        </select>
+      </label>
+    </div>
+
+    <label>Grade (1.00 to 5.00)
+      <input
+        id="recordGrade"
+        type="number"
+        min="1"
+        max="5"
+        step="0.01"
+        value="1.75"
+        required
+      >
+    </label>
+
+    <p class="record-count">
+      Grading scale: 1.00–3.00 Passed, above 3.00 Failed.
+    </p>
+
+    <div class="dialog-actions">
+      <button type="button" id="cancelRecordDialog" class="btn btn-outline">Cancel</button>
+      <button type="submit" id="saveRecordBtn" class="btn btn-primary">Save Grade</button>
+    </div>
+  </form>
+</dialog>
+
+</body>
+</html>

@@ -1,0 +1,512 @@
+
+/* REGISTRARSYS - COMPLETE STYLESHEET */
+
+:root {
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #17243b;
+  background: #f4f7fc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* MAIN LAYOUT */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background: #102447;
+  color: white;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 55px;
+}
+
+.brand-icon {
+  background: #3478f6;
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.brand strong {
+  display: block;
+  font-size: 19px;
+}
+
+.brand small {
+  display: block;
+  color: #a9bad5;
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.nav-label {
+  color: #91a6c9;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.nav-link {
+  display: block;
+  color: #c2d0e7;
+  text-decoration: none;
+  padding: 14px;
+  margin: 7px 0;
+  border-radius: 9px;
+  transition: background 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #2865c9;
+  color: white;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  font-size: 12px;
+  color: #91a6c9;
+}
+
+/* MAIN CONTENT */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 35px;
+}
+
+.topbar,
+.section-heading,
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.topbar {
+  margin-bottom: 35px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  color: #4076c7;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+h1 {
+  margin: 8px 0;
+  font-size: 30px;
+}
+
+h2 {
+  margin: 0 0 7px;
+  font-size: 19px;
+}
+
+p {
+  color: #7a8799;
+  margin: 5px 0;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-profile strong,
+.admin-profile small {
+  display: block;
+}
+
+.admin-profile small {
+  color: #7a8799;
+}
+
+.avatar {
+  background: #dce9ff;
+  color: #215cbd;
+  padding: 12px;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+/* DASHBOARD */
+
+.dashboard {
+  margin-bottom: 28px;
+}
+
+.section-heading {
+  margin-bottom: 18px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.stat-card,
+.panel {
+  background: white;
+  border: 1px solid #e4eaf4;
+  border-radius: 14px;
+  box-shadow: 0 3px 15px #17243b08;
+}
+
+.stat-card {
+  padding: 23px;
+}
+
+.stat-card span,
+.stat-card small {
+  display: block;
+  color: #77859b;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 34px;
+  margin: 15px 0;
+  color: #1d4e9d;
+}
+
+.stat-card small {
+  font-size: 12px;
+}
+
+/* PANELS */
+
+.panel {
+  padding: 25px;
+}
+
+.panel-heading {
+  margin-bottom: 22px;
+}
+
+/* BUTTONS */
+
+.btn {
+  border-radius: 9px;
+  padding: 11px 16px;
+  border: 1px solid #d6dfec;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #174fc9;
+}
+
+.btn-outline {
+  background: white;
+  color: #34445d;
+}
+
+.btn-outline:hover {
+  background: #f0f5ff;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* SEARCH AND FILTERS */
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+input,
+select {
+  padding: 11px 13px;
+  border: 1px solid #d8e0eb;
+  border-radius: 8px;
+  background: white;
+  min-width: 0;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #a9c8ff;
+}
+
+#searchInput,
+#enrollmentSearch {
+  flex: 1;
+}
+
+/* TABLES */
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  background: #f7f9fd;
+  color: #6a788e;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+td,
+th {
+  padding: 15px;
+  border-bottom: 1px solid #edf0f5;
+}
+
+td {
+  font-size: 14px;
+}
+
+#enrollments .table-scroll {
+  margin-top: 12px;
+}
+
+/* STATUS BADGES */
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 30px;
+  font-size: 12px;
+}
+
+.enrolled {
+  color: #137447;
+  background: #dcfce9;
+}
+
+.pending {
+  color: #986300;
+  background: #fff1c2;
+}
+
+/* TABLE ACTION BUTTONS */
+
+.action-btn {
+  border: 0;
+  background: #edf3ff;
+  color: #245bb6;
+  padding: 7px 11px;
+  border-radius: 6px;
+  margin: 2px;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background: #dce9ff;
+}
+
+.action-btn.delete {
+  color: #ba3434;
+  background: #fff0f0;
+}
+
+.action-btn.delete:hover {
+  background: #ffe0e0;
+}
+
+.record-count {
+  margin-top: 18px;
+  font-size: 13px;
+}
+
+/* NOTIFICATIONS */
+
+.notice {
+  padding: 14px;
+  margin-bottom: 20px;
+  background: #e4f0ff;
+  border-radius: 9px;
+}
+
+.notice.error {
+  background: #ffe6e6;
+  color: #9e2929;
+}
+
+/* POPUP FORMS */
+
+dialog {
+  width: min(520px, 94vw);
+  border: 0;
+  border-radius: 15px;
+  padding: 28px;
+  box-shadow: 0 20px 70px #0003;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+dialog::backdrop {
+  background: #0b183899;
+}
+
+.dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: 0;
+  font-size: 26px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin: 13px 0;
+}
+
+label input,
+label select {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+/* FOOTER */
+
+footer {
+  padding: 25px 0;
+  text-align: center;
+  color: #94a0b0;
+  font-size: 12px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1050px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .layout {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .brand {
+    margin-bottom: 12px;
+  }
+
+  .sidebar-bottom,
+  .nav-label {
+    display: none;
+  }
+
+  .sidebar nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .main {
+    padding: 18px;
+  }
+
+  .topbar,
+  .panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-profile {
+    display: none;
+  }
+
+  .stats {
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .toolbar {
+    flex-direction: column;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+    
