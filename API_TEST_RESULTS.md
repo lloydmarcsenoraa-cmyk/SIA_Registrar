@@ -1,4 +1,4 @@
-# RegistrarSys — API Test Results
+﻿# RegistrarSys â€” API Test Results
 
 ## Project Information
 
@@ -13,7 +13,7 @@
 | Test Case | Result |
 |---|---|
 | MySQL database connection | Passed |
-| Database table verification | Passed — 5 tables |
+| Database table verification | Passed â€” 5 tables |
 | GET `/api/students` | Passed |
 | GET `/api/programs` | Passed |
 | GET `/api/enrollments` | Passed |

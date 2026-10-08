@@ -1,396 +1,1154 @@
-
 openapi: 3.0.3
-
 info:
-  title: RegistrarSys REST API
+  title: RegistrarSys Mock REST API
   version: 1.0.0
-  description: |
-    Registrar Management System REST API
-    for the SIA College Management System.
-
+  description: Database-free in-memory Registrar module for the SIA College Management System. Data resets
+    when the mock server restarts.
 servers:
-  - url: http://localhost:3000
-    description: Local development server
-
-security: []
-
+- url: http://localhost:3001
+  description: Local mock API
 tags:
-  - name: System
-    description: API information
-  - name: Programs
-    description: Academic programs
-  - name: Students
-    description: Student records management
-  - name: Enrollments
-    description: Student enrollment management
-  - name: Courses
-    description: Course management
-  - name: Academic Records
-    description: Student academic records
-
+- name: System
+- name: Programs
+- name: Students
+- name: Enrollments
+- name: Courses
+- name: Academic Records
 paths:
-  /api:
+  /api/v1/health:
     get:
-      tags: [System]
-      summary: Get API information
-      operationId: getApiInfo
+      tags:
+      - System
+      summary: Health check
+      operationId: getHealth
       responses:
         '200':
-          description: API information returned
+          description: API is running
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                required:
+                - status
         '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/programs:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/programs:
     get:
-      tags: [Programs]
-      summary: Get all programs
-      operationId: getPrograms
+      tags:
+      - Programs
+      summary: List programs
+      operationId: listPrograms
       responses:
         '200':
-          description: Programs retrieved
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    minimum: 0
+                    example: 3
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Program'
+                required:
+                - success
+                - count
+                - data
         '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/students:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/students:
     get:
-      tags: [Students]
-      summary: Get all students
-      operationId: getStudents
+      tags:
+      - Students
+      summary: List students
+      operationId: listStudents
       responses:
         '200':
-          description: Students retrieved
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    minimum: 0
+                    example: 3
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Student'
+                required:
+                - success
+                - count
+                - data
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     post:
-      tags: [Students]
-      summary: Create a student
+      tags:
+      - Students
+      summary: Create student
       operationId: createStudent
-      requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
-      responses:
-        '200':
-          description: Request successful
-        '201':
-          description: Student created
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/students/{id}:
-    parameters:
-      - $ref: '#/components/parameters/Id'
-
-    get:
-      tags: [Students]
-      summary: Get student by ID
-      operationId: getStudentById
-      responses:
-        '200':
-          description: Student retrieved
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-    put:
-      tags: [Students]
-      summary: Update student
-      operationId: updateStudent
-      requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
-      responses:
-        '200':
-          description: Student updated
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-    delete:
-      tags: [Students]
-      summary: Delete student
-      operationId: deleteStudent
-      responses:
-        '200':
-          description: Student deleted
-        '204':
-          description: Student deleted without response body
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/enrollments:
-    get:
-      tags: [Enrollments]
-      summary: Get all enrollments
-      operationId: getEnrollments
-      responses:
-        '200':
-          description: Enrollments retrieved
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-    post:
-      tags: [Enrollments]
-      summary: Create enrollment
-      operationId: createEnrollment
-      requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
-      responses:
-        '200':
-          description: Request successful
-        '201':
-          description: Enrollment created
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/enrollments/{id}:
-    get:
-      tags: [Enrollments]
-      summary: Get enrollment by ID
-      operationId: getEnrollmentById
-      parameters:
-        - $ref: '#/components/parameters/Id'
-      responses:
-        '200':
-          description: Enrollment retrieved
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/enrollments/{id}/status:
-    patch:
-      tags: [Enrollments]
-      summary: Update enrollment status
-      operationId: updateEnrollmentStatus
-      parameters:
-        - $ref: '#/components/parameters/Id'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - status
-              properties:
-                status:
-                  type: string
-                  example: Enrolled
+              $ref: '#/components/schemas/StudentCreate'
       responses:
-        '200':
-          description: Enrollment status updated
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Student'
+                required:
+                - success
+                - data
         '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/courses:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/students/{id}:
+    parameters:
+    - &id001
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        example: 1
+      description: Positive integer resource ID
     get:
-      tags: [Courses]
-      summary: Get all courses
-      operationId: getCourses
+      tags:
+      - Students
+      summary: Get student by ID
+      operationId: getStudentById
       responses:
         '200':
-          description: Courses retrieved
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Student'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+      - Students
+      summary: Update student
+      operationId: updateStudent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentUpdate'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Student'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+      - Students
+      summary: Delete student
+      operationId: deleteStudent
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Student'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/enrollments:
+    get:
+      tags:
+      - Enrollments
+      summary: List enrollments
+      operationId: listEnrollments
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    minimum: 0
+                    example: 3
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Enrollment'
+                required:
+                - success
+                - count
+                - data
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     post:
-      tags: [Courses]
+      tags:
+      - Enrollments
+      summary: Create enrollment
+      operationId: createEnrollment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Enrollment'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/enrollments/{id}:
+    parameters:
+    - *id001
+    get:
+      tags:
+      - Enrollments
+      summary: Get enrollment by ID
+      operationId: getEnrollmentById
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Enrollment'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/courses:
+    get:
+      tags:
+      - Courses
+      summary: List courses
+      operationId: listCourses
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    minimum: 0
+                    example: 3
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Course'
+                required:
+                - success
+                - count
+                - data
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+      - Courses
       summary: Create course
       operationId: createCourse
       requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseCreate'
       responses:
-        '200':
-          description: Request successful
         '201':
-          description: Course created
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Course'
+                required:
+                - success
+                - data
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/courses/{id}:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/courses/{id}:
     parameters:
-      - $ref: '#/components/parameters/Id'
-
+    - *id001
     get:
-      tags: [Courses]
+      tags:
+      - Courses
       summary: Get course by ID
       operationId: getCourseById
       responses:
         '200':
-          description: Course retrieved
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Course'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     put:
-      tags: [Courses]
+      tags:
+      - Courses
       summary: Update course
       operationId: updateCourse
       requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseUpdate'
       responses:
         '200':
-          description: Course updated
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Course'
+                required:
+                - success
+                - data
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     delete:
-      tags: [Courses]
+      tags:
+      - Courses
       summary: Delete course
       operationId: deleteCourse
       responses:
         '200':
-          description: Course deleted
-        '204':
-          description: Course deleted without response body
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Course'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/academic-records:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/academic-records:
     get:
-      tags: [Academic Records]
-      summary: Get all academic records
-      operationId: getAcademicRecords
+      tags:
+      - Academic Records
+      summary: List academic-records
+      operationId: listAcademicRecords
       responses:
         '200':
-          description: Academic records retrieved
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    minimum: 0
+                    example: 3
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AcademicRecord'
+                required:
+                - success
+                - count
+                - data
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     post:
-      tags: [Academic Records]
-      summary: Create academic record
+      tags:
+      - Academic Records
+      summary: Create academicrecord
       operationId: createAcademicRecord
       requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicRecordCreate'
       responses:
-        '200':
-          description: Request successful
         '201':
-          description: Academic record created
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AcademicRecord'
+                required:
+                - success
+                - data
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
-  /api/academic-records/{id}:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/academic-records/{id}:
     parameters:
-      - $ref: '#/components/parameters/Id'
-
+    - *id001
     get:
-      tags: [Academic Records]
-      summary: Get academic record by ID
+      tags:
+      - Academic Records
+      summary: Get academicrecord by ID
       operationId: getAcademicRecordById
       responses:
         '200':
-          description: Academic record retrieved
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AcademicRecord'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     put:
-      tags: [Academic Records]
-      summary: Update academic record
+      tags:
+      - Academic Records
+      summary: Update academicrecord
       operationId: updateAcademicRecord
       requestBody:
-        $ref: '#/components/requestBodies/RecordBody'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicRecordUpdate'
       responses:
         '200':
-          description: Academic record updated
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AcademicRecord'
+                required:
+                - success
+                - data
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
     delete:
-      tags: [Academic Records]
-      summary: Delete academic record
+      tags:
+      - Academic Records
+      summary: Delete academicrecord
       operationId: deleteAcademicRecord
       responses:
         '200':
-          description: Academic record deleted
-        '204':
-          description: Academic record deleted without response body
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/AcademicRecord'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
         '500':
-          $ref: '#/components/responses/ServerError'
-
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/enrollments/{id}/status:
+    parameters:
+    - *id001
+    patch:
+      tags:
+      - Enrollments
+      summary: Approve, reject, or reset an enrollment
+      operationId: updateEnrollmentStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentStatusUpdate'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Enrollment'
+                required:
+                - success
+                - data
+        '400':
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
 components:
-  parameters:
-    Id:
-      name: id
-      in: path
-      required: true
-      description: Numeric record identifier
-      schema:
-        type: integer
-        minimum: 1
-
   schemas:
-    RecordPayload:
+    ProblemDetails:
       type: object
-      description: |
-        Record fields must match the backend implementation.
-      additionalProperties: true
-
-    ErrorResponse:
+      properties:
+        type:
+          type: string
+          example: about:blank
+        title:
+          type: string
+          example: Bad Request
+        status:
+          type: integer
+          minimum: 100
+          example: 400
+        detail:
+          type: string
+          example: Invalid request data
+      required:
+      - type
+      - title
+      - status
+      - detail
+    Program:
       type: object
-      additionalProperties: true
-      description: API error response
-
-  requestBodies:
-    RecordBody:
-      required: true
-      description: Record information in JSON format
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/RecordPayload'
-
-  responses:
-    BadRequest:
-      description: Invalid request data
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-    NotFound:
-      description: Requested record not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-
-    ServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 1
+        code:
+          type: string
+          example: BSIT
+        name:
+          type: string
+          example: Bachelor of Science in Information Technology
+      required:
+      - id
+      - code
+      - name
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 4
+        studentNumber: &id002
+          type: string
+          example: 2026-004
+        firstName: &id003
+          type: string
+          example: Ana
+        lastName: &id004
+          type: string
+          example: Reyes
+        program: &id005
+          type: string
+          example: BSIT
+        yearLevel: &id006
+          type: integer
+          minimum: 1
+          maximum: 6
+          example: 1
+        status: &id007
+          type: string
+          example: Pending
+          enum:
+          - Pending
+          - Enrolled
+      required:
+      - id
+      - studentNumber
+      - firstName
+      - lastName
+      - program
+      - yearLevel
+      - status
+    StudentCreate:
+      type: object
+      properties: &id008
+        studentNumber: *id002
+        firstName: *id003
+        lastName: *id004
+        program: *id005
+        yearLevel: *id006
+        status: *id007
+      required:
+      - studentNumber
+      - firstName
+      - lastName
+      - program
+      - yearLevel
+    StudentUpdate:
+      type: object
+      properties: *id008
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 4
+        code: &id009
+          type: string
+          example: IT401
+        title: &id010
+          type: string
+          example: Systems Integration
+        program: &id011
+          type: string
+          example: BSIT
+        units: &id012
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 3
+        yearLevel: &id013
+          type: integer
+          minimum: 1
+          maximum: 6
+          example: 4
+      required:
+      - id
+      - code
+      - title
+      - program
+      - units
+      - yearLevel
+    CourseCreate:
+      type: object
+      properties: &id014
+        code: *id009
+        title: *id010
+        program: *id011
+        units: *id012
+        yearLevel: *id013
+      required:
+      - code
+      - title
+      - program
+      - units
+      - yearLevel
+    CourseUpdate:
+      type: object
+      properties: *id014
+    Enrollment:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 3
+        studentId: &id015
+          type: integer
+          minimum: 1
+          example: 3
+        academicYear: &id016
+          type: string
+          example: 2026-2027
+        semester: &id017
+          type: string
+          example: 2nd Semester
+          enum:
+          - 1st Semester
+          - 2nd Semester
+          - Summer
+        status:
+          type: string
+          example: Pending
+          enum:
+          - Pending
+          - Approved
+          - Rejected
+      required:
+      - id
+      - studentId
+      - academicYear
+      - semester
+      - status
+    EnrollmentCreate:
+      type: object
+      properties:
+        studentId: *id015
+        academicYear: *id016
+        semester: *id017
+      required:
+      - studentId
+      - academicYear
+      - semester
+    EnrollmentStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Approved
+          enum:
+          - Pending
+          - Approved
+          - Rejected
+      required:
+      - status
+    AcademicRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          example: 3
+        studentId: *id015
+        courseId: &id018
+          type: integer
+          minimum: 1
+          example: 1
+        academicYear: *id016
+        semester: *id017
+        grade: &id019
+          type: number
+          minimum: 1
+          maximum: 5
+          example: 1.75
+      required:
+      - id
+      - studentId
+      - courseId
+      - academicYear
+      - semester
+      - grade
+    AcademicRecordCreate:
+      type: object
+      properties: &id020
+        studentId: *id015
+        courseId: *id018
+        academicYear: *id016
+        semester: *id017
+        grade: *id019
+      required:
+      - studentId
+      - courseId
+      - academicYear
+      - semester
+      - grade
+    AcademicRecordUpdate:
+      type: object
+      properties: *id020
